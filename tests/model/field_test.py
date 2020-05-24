@@ -15,12 +15,12 @@ class FieldTest(unittest.TestCase):
             Account(account_id="100", public_key="xxx", private_key="yyy"),
             {
                 'field_id':200,
-                'shortcut_name':u"test_field",
-                'display_name':u"Test Field",
+                'shortcut_name':"test_field",
+                'display_name':"Test Field",
                 'field_type':FieldType.TextArray,
                 'widget_type':WidgetType.RadioButtonMenu,
                 'column_order':3,
-                'options':[u"A", u"B", u"C"],
+                'options':["A", "B", "C"],
                 'deleted_at': None
             }
         )
@@ -31,25 +31,25 @@ class FieldTest(unittest.TestCase):
     def test_can_save_a_field(self):
         fld = Field(
             self.field.account,
-            {'shortcut_name':u"test_field"})
+            {'shortcut_name':"test_field"})
         MockAdapter.expected = 1024
 
         result = fld.save()
 
         self.assertIsNone(result)
-        self.assertEquals(fld.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(fld.account.adapter.called, 1)
+        self.assertEqual(
             fld.account.adapter.call,
-            ('POST', '/fields', {'shortcut_name':u"test_field"}))
-        self.assertEquals(1024, fld['field_id'])
-        self.assertEquals(u"test_field", fld['shortcut_name'])
+            ('POST', '/fields', {'shortcut_name':"test_field"}))
+        self.assertEqual(1024, fld['field_id'])
+        self.assertEqual("test_field", fld['shortcut_name'])
 
     def test_can_save_a_field2(self):
         fld = Field(
             self.field.account,
             {
-                'shortcut_name':u"test_field",
-                'display_name':u"Test Field",
+                'shortcut_name':"test_field",
+                'display_name':"Test Field",
                 'field_type':FieldType.Text,
                 'widget_type':WidgetType.ShortAnswer,
                 'column_order':1
@@ -59,24 +59,24 @@ class FieldTest(unittest.TestCase):
         result = fld.save()
 
         self.assertIsNone(result)
-        self.assertEquals(fld.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(fld.account.adapter.called, 1)
+        self.assertEqual(
             fld.account.adapter.call,
             (
                 'POST', '/fields',
                 {
-                    'shortcut_name':u"test_field",
-                    'display_name':u"Test Field",
+                    'shortcut_name':"test_field",
+                    'display_name':"Test Field",
                     'field_type':"text",
                     'widget_type':"text",
                     'column_order':1
                 }))
-        self.assertEquals(1024, fld['field_id'])
-        self.assertEquals(u"test_field", fld['shortcut_name'])
-        self.assertEquals(u"Test Field", fld['display_name'])
-        self.assertEquals(FieldType.Text, fld['field_type'])
-        self.assertEquals(WidgetType.ShortAnswer, fld['widget_type'])
-        self.assertEquals(1, fld['column_order'])
+        self.assertEqual(1024, fld['field_id'])
+        self.assertEqual("test_field", fld['shortcut_name'])
+        self.assertEqual("Test Field", fld['display_name'])
+        self.assertEqual(FieldType.Text, fld['field_type'])
+        self.assertEqual(WidgetType.ShortAnswer, fld['widget_type'])
+        self.assertEqual(1, fld['column_order'])
 
     def test_can_save_a_field3(self):
         MockAdapter.expected = 200
@@ -84,18 +84,18 @@ class FieldTest(unittest.TestCase):
         result = self.field.save()
 
         self.assertIsNone(result)
-        self.assertEquals(self.field.account.adapter.called, 1)
-        self.assertEquals(self.field.account.adapter.call,
+        self.assertEqual(self.field.account.adapter.called, 1)
+        self.assertEqual(self.field.account.adapter.call,
             (
                 'PUT',
                 '/fields/200',
                 {
-                    'shortcut_name':u"test_field",
-                    'display_name':u"Test Field",
+                    'shortcut_name':"test_field",
+                    'display_name':"Test Field",
                     'field_type':"text[]",
                     'widget_type':"radio",
                     'column_order':3,
-                    'options': [u"A", u"B", u"C"]
+                    'options': ["A", "B", "C"]
                 }
             ))
 
@@ -104,7 +104,7 @@ class FieldTest(unittest.TestCase):
 
         with self.assertRaises(ex.NoFieldIdError):
             fld.delete()
-        self.assertEquals(self.field.account.adapter.called, 0)
+        self.assertEqual(self.field.account.adapter.called, 0)
         self.assertFalse(self.field.is_deleted())
 
     def test_can_delete_a_field2(self):
@@ -119,7 +119,7 @@ class FieldTest(unittest.TestCase):
         result = fld.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(fld.account.adapter.called, 0)
+        self.assertEqual(fld.account.adapter.called, 0)
         self.assertTrue(fld.is_deleted())
 
     def test_can_delete_a_field3(self):
@@ -134,8 +134,8 @@ class FieldTest(unittest.TestCase):
         result = fld.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(fld.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(fld.account.adapter.called, 1)
+        self.assertEqual(
             fld.account.adapter.call,
             ('DELETE', '/fields/200', {}))
         self.assertTrue(fld.is_deleted())
@@ -146,8 +146,8 @@ class FieldTest(unittest.TestCase):
         result = self.field.clear_member_information()
 
         self.assertIsNone(result)
-        self.assertEquals(self.field.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.field.account.adapter.called, 1)
+        self.assertEqual(
             self.field.account.adapter.call,
             ('POST', '/fields/200/clear', {}))
 
@@ -156,7 +156,7 @@ class FieldTest(unittest.TestCase):
         with self.assertRaises(ex.NoFieldIdError):
             self.field.clear_member_information()
 
-        self.assertEquals(self.field.account.adapter.called, 0)
+        self.assertEqual(self.field.account.adapter.called, 0)
 
     def test_can_clear_member_info3(self):
         MockAdapter.expected = False
@@ -164,7 +164,7 @@ class FieldTest(unittest.TestCase):
         with self.assertRaises(ex.ClearMemberFieldInformationError):
             self.field.clear_member_information()
 
-        self.assertEquals(self.field.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.field.account.adapter.called, 1)
+        self.assertEqual(
             self.field.account.adapter.call,
             ('POST', '/fields/200/clear', {}))

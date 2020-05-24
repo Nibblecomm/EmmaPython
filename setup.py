@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='emma',
-    version='0.2',
+    version='0.3',
     packages=['emma',],
     license='MIT',
     long_description=open('README.md').read(),

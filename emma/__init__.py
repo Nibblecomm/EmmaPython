@@ -1,5 +1,5 @@
 """Emma API Wrapper for Python"""
-from enumerations import Report as r
+from .enumerations import Report as r
 
 
 def get_report(account, report, id=None, params=None):

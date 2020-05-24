@@ -11,13 +11,13 @@ SERIALIZED_DATETIME_ALT_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 def str_fields_to_datetime(fields, raw):
     """Parses Emma date fields to :class:`datetime` objects"""
     return dict((x[0], datetime.strptime(x[1], SERIALIZED_DATETIME_FORMAT))
-        for x in raw.items() if x[0] in fields and x[1] is not None)
+        for x in list(raw.items()) if x[0] in fields and x[1] is not None)
 
 
 def str_fields_to_datetime_alt(fields, raw):
     """Parses Emma date fields to :class:`datetime` objects"""
     return dict((x[0], datetime.strptime(x[1], SERIALIZED_DATETIME_ALT_FORMAT))
-                for x in raw.items() if x[0] in fields and x[1] is not None)
+                for x in list(raw.items()) if x[0] in fields and x[1] is not None)
 
 
 class BaseApiModel(collections.MutableMapping):
@@ -60,8 +60,8 @@ class BaseApiModel(collections.MutableMapping):
             self._dict = items
         else:
             self._dict = dict(
-                [replace(x) for x in self._dict.items()]
-                + [x for x in items.items() if is_new(x)]
+                [replace(x) for x in list(self._dict.items())]
+                + [x for x in list(items.items()) if is_new(x)]
             )
 
     def _parse_raw(self, raw):

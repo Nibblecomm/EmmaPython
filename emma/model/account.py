@@ -165,7 +165,7 @@ class AccountFieldCollection(BaseApiModel):
             >>> acct.fields.export_shortcuts()
             ["first_name", "last_name", ...]
         """
-        return [x['shortcut_name'] for x in self.fetch_all().values()]
+        return [x['shortcut_name'] for x in list(self.fetch_all().values())]
 
 
 class AccountGroupCollection(BaseApiModel):
@@ -386,7 +386,7 @@ class AccountImportCollection(BaseApiModel):
 
         # Update internal dictionary
         self._dict = dict(
-            x for x in self._dict.items() if x[0] not in import_ids)
+            x for x in list(self._dict.items()) if x[0] not in import_ids)
 
 
 class AccountMemberCollection(BaseApiModel):
@@ -404,7 +404,7 @@ class AccountMemberCollection(BaseApiModel):
     def __getitem__(self, key):
         if isinstance(key, int):
             item = self.find_one_by_member_id(key)
-        if isinstance(key, str) or isinstance(key, unicode):
+        if isinstance(key, str) or isinstance(key, str):
             item = self.find_one_by_email(str(key))
         if not item:
             raise KeyError(key)
@@ -533,7 +533,7 @@ class AccountMemberCollection(BaseApiModel):
         """
         path = '/members/email/%s' % email
         params = {"deleted":True} if deleted else {}
-        members = [x for x in self._dict.values() if x['email'] == email]
+        members = [x for x in list(self._dict.values()) if x['email'] == email]
         if not members:
             member = self.account.adapter.get(path, params)
             if member is not None:
@@ -581,7 +581,7 @@ class AccountMemberCollection(BaseApiModel):
             'members': (
                 ([] if not members else [x.extract() for x in members])
                 + ([] if add_only
-                   else [x.extract() for x in self._dict.values()]))
+                   else [x.extract() for x in list(self._dict.values())]))
         }
         if add_only:
             data['add_only'] = add_only
@@ -612,7 +612,7 @@ class AccountMemberCollection(BaseApiModel):
 
         # Update internal dictionary
         self._dict = dict(
-            x for x in self._dict.items() if x[1]['member_status_id'] != status)
+            x for x in list(self._dict.items()) if x[1]['member_status_id'] != status)
 
     def delete(self, member_ids=None):
         """
@@ -637,7 +637,7 @@ class AccountMemberCollection(BaseApiModel):
 
         # Update internal dictionary
         self._dict = dict(
-            x for x in self._dict.items() if x[0] not in member_ids)
+            x for x in list(self._dict.items()) if x[0] not in member_ids)
 
     def change_status_by_member_id(self, member_ids=None, status_to=None):
         """
@@ -827,11 +827,11 @@ class AccountMailingCollection(BaseApiModel):
             True
         """
         path = "/mailings/validate"
-        data = dict(x for x in {
+        data = dict(x for x in list({
             'html_body': html_body,
             'plaintext': plaintext,
             'subject': subject
-        }.items() if x[1] is not None)
+        }.items()) if x[1] is not None)
 
         if not data:
             return False

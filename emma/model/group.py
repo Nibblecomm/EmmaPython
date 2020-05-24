@@ -95,7 +95,7 @@ class Group(BaseApiModel):
 
         keys = ['group_name']
 
-        return dict(x for x in self._dict.items() if x[0] in keys)
+        return dict(x for x in list(self._dict.items()) if x[0] in keys)
 
     def _add(self):
         """Add a single group"""
@@ -284,7 +284,7 @@ class GroupMemberCollection(BaseApiModel):
         path = '/groups/%s/members/remove' % self.group['member_group_id']
         data = {'member_ids': member_ids}
         removed = self.group.account.adapter.put(path, data)
-        self._dict = dict(x for x in self._dict.items() if x[0] not in removed)
+        self._dict = dict(x for x in list(self._dict.items()) if x[0] not in removed)
 
     def remove_all(self, status=None):
         """

@@ -23,8 +23,8 @@ class MemberImportTest(unittest.TestCase):
         )
 
     def test_can_parse_special_fields_correctly(self):
-        self.assertEquals(self.emma_import['status'], ImportStatus.Ok)
-        self.assertEquals(self.emma_import['style'], ImportStyle.AddAndUpdate)
+        self.assertEqual(self.emma_import['status'], ImportStatus.Ok)
+        self.assertEqual(self.emma_import['style'], ImportStyle.AddAndUpdate)
         self.assertIsInstance(self.emma_import['import_started'], datetime)
         self.assertIsInstance(self.emma_import['import_finished'], datetime)
 
@@ -48,29 +48,29 @@ class ImportMemberCollectionTest(unittest.TestCase):
     def test_can_fetch_all_members(self):
         with self.assertRaises(ex.NoImportIdError):
             self.members.fetch_all()
-        self.assertEquals(self.members.member_import.account.adapter.called, 0)
+        self.assertEqual(self.members.member_import.account.adapter.called, 0)
 
     def test_can_fetch_all_members2(self):
         # Setup
         MockAdapter.expected = [
-            {'member_id': 200, 'email': u"test01@example.org"},
-            {'member_id': 201, 'email': u"test02@example.org"},
-            {'member_id': 202, 'email': u"test03@example.org"}
+            {'member_id': 200, 'email': "test01@example.org"},
+            {'member_id': 201, 'email': "test02@example.org"},
+            {'member_id': 202, 'email': "test03@example.org"}
         ]
         self.members.member_import['import_id'] = 1024
 
         members = self.members.fetch_all()
 
-        self.assertEquals(self.members.member_import.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.member_import.account.adapter.called, 1)
+        self.assertEqual(
             self.members.member_import.account.adapter.call,
             ('GET', '/members/imports/1024/members', {}))
         self.assertIsInstance(members, dict)
-        self.assertEquals(3, len(members))
-        self.assertEquals(3, len(self.members))
+        self.assertEqual(3, len(members))
+        self.assertEqual(3, len(self.members))
         self.assertIsInstance(self.members[200], Member)
         self.assertIsInstance(self.members[201], Member)
         self.assertIsInstance(self.members[202], Member)
-        self.assertEquals(self.members[200]['email'], u"test01@example.org")
-        self.assertEquals(self.members[201]['email'], u"test02@example.org")
-        self.assertEquals(self.members[202]['email'], u"test03@example.org")
+        self.assertEqual(self.members[200]['email'], "test01@example.org")
+        self.assertEqual(self.members[201]['email'], "test02@example.org")
+        self.assertEqual(self.members[202]['email'], "test03@example.org")

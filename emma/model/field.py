@@ -91,7 +91,7 @@ class Field(BaseApiModel):
         keys = ['display_name', 'field_type', 'widget_type', 'column_order',
                 'shortcut_name', 'options']
 
-        return dict(x for x in self._dict.items() if x[0] in keys)
+        return dict(x for x in list(self._dict.items()) if x[0] in keys)
 
     def _add(self):
         """Add a single field"""

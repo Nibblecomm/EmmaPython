@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Emma API Wrapper (Python)'
-copyright = u'2013, Emma'
+project = 'Emma API Wrapper (Python)'
+copyright = '2013, Emma'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,8 +183,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'EmmaAPIWrapperPython.tex', u'Emma API Wrapper (Python) Documentation',
-   u'Emma', 'manual'),
+  ('index', 'EmmaAPIWrapperPython.tex', 'Emma API Wrapper (Python) Documentation',
+   'Emma', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +213,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'emmaapiwrapperpython', u'Emma API Wrapper (Python) Documentation',
-     [u'Emma'], 1)
+    ('index', 'emmaapiwrapperpython', 'Emma API Wrapper (Python) Documentation',
+     ['Emma'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'EmmaAPIWrapperPython', u'Emma API Wrapper (Python) Documentation',
-   u'Emma', 'EmmaAPIWrapperPython', 'One line description of project.',
+  ('index', 'EmmaAPIWrapperPython', 'Emma API Wrapper (Python) Documentation',
+   'Emma', 'EmmaAPIWrapperPython', 'One line description of project.',
    'Miscellaneous'),
 ]
 

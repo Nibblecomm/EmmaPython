@@ -63,7 +63,7 @@ class WebHook(BaseApiModel):
         """
         keys = ['url', 'event', 'method', 'public_key']
 
-        return dict(x for x in self._dict.items() if x[0] in keys)
+        return dict(x for x in list(self._dict.items()) if x[0] in keys)
 
     def _add(self):
         """Add a single trigger"""

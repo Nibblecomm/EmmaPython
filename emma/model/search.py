@@ -92,7 +92,7 @@ class Search(BaseApiModel):
         """
         keys = ['name', 'criteria']
 
-        return dict(x for x in self._dict.items() if x[0] in keys)
+        return dict(x for x in list(self._dict.items()) if x[0] in keys)
 
     def _add(self):
         """Add a single search"""

@@ -29,7 +29,7 @@ class SearchTest(unittest.TestCase):
 
         with self.assertRaises(ex.NoSearchIdError):
             self.search.delete()
-        self.assertEquals(self.search.account.adapter.called, 0)
+        self.assertEqual(self.search.account.adapter.called, 0)
         self.assertFalse(self.search.is_deleted())
 
     def test_can_delete_a_search2(self):
@@ -38,7 +38,7 @@ class SearchTest(unittest.TestCase):
         result = self.search.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(self.search.account.adapter.called, 0)
+        self.assertEqual(self.search.account.adapter.called, 0)
         self.assertTrue(self.search.is_deleted())
 
     def test_can_delete_a_search3(self):
@@ -47,8 +47,8 @@ class SearchTest(unittest.TestCase):
         result = self.search.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(self.search.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.search.account.adapter.called, 1)
+        self.assertEqual(
             self.search.account.adapter.call,
             ('DELETE', '/searches/200', {}))
         self.assertTrue(self.search.is_deleted())
@@ -56,40 +56,40 @@ class SearchTest(unittest.TestCase):
     def test_can_save_a_search(self):
         srch = Search(
             self.search.account,
-            {'name':u"Test Search", 'criteria':["group", "eq", "Test Group"]}
+            {'name':"Test Search", 'criteria':["group", "eq", "Test Group"]}
         )
         MockAdapter.expected = 1024
 
         result = srch.save()
 
         self.assertIsNone(result)
-        self.assertEquals(srch.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(srch.account.adapter.called, 1)
+        self.assertEqual(
             srch.account.adapter.call,
             (
                 'POST',
                 '/searches',
                 {
-                    'name': u"Test Search",
+                    'name': "Test Search",
                     'criteria':["group", "eq", "Test Group"]
                 }))
-        self.assertEquals(1024, srch['search_id'])
+        self.assertEqual(1024, srch['search_id'])
 
     def test_can_save_a_search2(self):
         MockAdapter.expected = True
 
-        self.search['name'] = u"Test Search"
+        self.search['name'] = "Test Search"
         self.search['criteria'] = ["group", "eq", "Test Group"]
         result = self.search.save()
 
         self.assertIsNone(result)
-        self.assertEquals(self.search.account.adapter.called, 1)
-        self.assertEquals(self.search.account.adapter.call,
+        self.assertEqual(self.search.account.adapter.called, 1)
+        self.assertEqual(self.search.account.adapter.call,
             (
                 'PUT',
                 '/searches/200',
                 {
-                    'name': u"Test Search",
+                    'name': "Test Search",
                     'criteria':["group", "eq", "Test Group"]
                 }))
 
@@ -106,28 +106,28 @@ class SearchMemberCollectionTest(unittest.TestCase):
         del(self.members.search['search_id'])
         with self.assertRaises(ex.NoSearchIdError):
             self.members.fetch_all()
-        self.assertEquals(self.members.search.account.adapter.called, 0)
+        self.assertEqual(self.members.search.account.adapter.called, 0)
 
     def test_can_fetch_all_members2(self):
         # Setup
         MockAdapter.expected = [
-            {'member_id': 200, 'email': u"test01@example.org"},
-            {'member_id': 201, 'email': u"test02@example.org"},
-            {'member_id': 202, 'email': u"test03@example.org"}
+            {'member_id': 200, 'email': "test01@example.org"},
+            {'member_id': 201, 'email': "test02@example.org"},
+            {'member_id': 202, 'email': "test03@example.org"}
         ]
 
         members = self.members.fetch_all()
 
-        self.assertEquals(self.members.search.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.search.account.adapter.called, 1)
+        self.assertEqual(
             self.members.search.account.adapter.call,
             ('GET', '/searches/1024/members', {}))
         self.assertIsInstance(members, dict)
-        self.assertEquals(3, len(members))
-        self.assertEquals(3, len(self.members))
+        self.assertEqual(3, len(members))
+        self.assertEqual(3, len(self.members))
         self.assertIsInstance(self.members[200], Member)
         self.assertIsInstance(self.members[201], Member)
         self.assertIsInstance(self.members[202], Member)
-        self.assertEquals(self.members[200]['email'], u"test01@example.org")
-        self.assertEquals(self.members[201]['email'], u"test02@example.org")
-        self.assertEquals(self.members[202]['email'], u"test03@example.org")
+        self.assertEqual(self.members[200]['email'], "test01@example.org")
+        self.assertEqual(self.members[201]['email'], "test02@example.org")
+        self.assertEqual(self.members[202]['email'], "test03@example.org")

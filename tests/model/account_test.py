@@ -55,13 +55,13 @@ class AccountFieldCollectionTest(unittest.TestCase):
 
     def test_factory_produces_a_new_field(self):
         self.assertIsInstance(self.fields.factory(), Field)
-        self.assertEquals(self.fields.account.adapter.called, 0)
+        self.assertEqual(self.fields.account.adapter.called, 0)
 
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'field_id': 201}]
         self.assertIsInstance(self.fields.fetch_all(), dict)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields', {}))
 
@@ -70,28 +70,28 @@ class AccountFieldCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'field_id': 201},{'field_id': 204}]
 
         self.assertIsInstance(self.fields.fetch_all(deleted=True), dict)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields', {"deleted":True}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'field_id': 201}]
-        self.assertEquals(0, len(self.fields))
+        self.assertEqual(0, len(self.fields))
         self.fields.fetch_all()
-        self.assertEquals(1, len(self.fields))
+        self.assertEqual(1, len(self.fields))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'field_id': 201}]
         self.fields.fetch_all()
         self.fields.fetch_all()
-        self.assertEquals(self.fields.account.adapter.called, 1)
+        self.assertEqual(self.fields.account.adapter.called, 1)
 
     def test_field_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'field_id': 201}]
         self.fields.fetch_all()
         self.assertIsInstance(self.fields, AccountFieldCollection)
-        self.assertEquals(1, len(self.fields))
+        self.assertEqual(1, len(self.fields))
         self.assertIsInstance(self.fields[201], Field)
 
     def test_fetch_one_by_field_id_returns_a_field_object(self):
@@ -101,9 +101,9 @@ class AccountFieldCollectionTest(unittest.TestCase):
         member = self.fields.find_one_by_field_id(201)
 
         self.assertIsInstance(member, Field)
-        self.assertEquals(member['field_id'], 201)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['field_id'], 201)
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields/201', {}))
 
@@ -114,9 +114,9 @@ class AccountFieldCollectionTest(unittest.TestCase):
         member = self.fields.find_one_by_field_id(204, deleted=True)
 
         self.assertIsInstance(member, Field)
-        self.assertEquals(member['field_id'], 204)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['field_id'], 204)
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields/204', {"deleted":True}))
 
@@ -128,7 +128,7 @@ class AccountFieldCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.fields)
         self.assertIsInstance(self.fields[201], Field)
-        self.assertEquals(self.fields[201]['field_id'], 201)
+        self.assertEqual(self.fields[201]['field_id'], 201)
 
     def test_fetch_one_by_field_id_caches_result(self):
         # Setup
@@ -137,7 +137,7 @@ class AccountFieldCollectionTest(unittest.TestCase):
         self.fields.find_one_by_field_id(201)
         self.fields.find_one_by_field_id(201)
 
-        self.assertEquals(self.fields.account.adapter.called, 1)
+        self.assertEqual(self.fields.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_field_id(self):
         # Setup
@@ -147,9 +147,9 @@ class AccountFieldCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.fields)
         self.assertIsInstance(member, Field)
-        self.assertEquals(self.fields[201]['field_id'], 201)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.fields[201]['field_id'], 201)
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields/201', {'deleted': True}))
 
@@ -159,24 +159,24 @@ class AccountFieldCollectionTest(unittest.TestCase):
 
         field = self.fields.get(204)
 
-        self.assertEquals(0, len(self.fields))
+        self.assertEqual(0, len(self.fields))
         self.assertIsNone(field)
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('GET', '/fields/204', {'deleted': True}))
 
     def test_field_collection_can_export_list_of_valid_shortcut_names(self):
         MockAdapter.expected = [
-            {'field_id': 200, 'shortcut_name': u"first_name"},
-            {'field_id': 201, 'shortcut_name': u"last_name"},
-            {'field_id': 202, 'shortcut_name': u"work_phone"}]
+            {'field_id': 200, 'shortcut_name': "first_name"},
+            {'field_id': 201, 'shortcut_name': "last_name"},
+            {'field_id': 202, 'shortcut_name': "work_phone"}]
         shortcuts = self.fields.export_shortcuts()
         self.assertIsInstance(shortcuts, list)
-        self.assertEquals(3, len(shortcuts))
+        self.assertEqual(3, len(shortcuts))
         self.assertListEqual(
             shortcuts,
-            [u"first_name", u"last_name", u"work_phone"]
+            ["first_name", "last_name", "work_phone"]
         )
 
     def test_can_delete_a_single_group_with_del(self):
@@ -189,11 +189,11 @@ class AccountFieldCollectionTest(unittest.TestCase):
 
         del(self.fields[203])
 
-        self.assertEquals(self.fields.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.fields.account.adapter.called, 1)
+        self.assertEqual(
             self.fields.account.adapter.call,
             ('DELETE', '/fields/203', {}))
-        self.assertEquals(1, len(self.fields))
+        self.assertEqual(1, len(self.fields))
         self.assertIn(204, self.fields)
 
 
@@ -208,8 +208,8 @@ class AccountGroupCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'member_group_id': 201}]
         self.assertIsInstance(self.groups.fetch_all(), dict)
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(
             self.groups.account.adapter.call,
             ('GET', '/groups', {}))
 
@@ -220,28 +220,28 @@ class AccountGroupCollectionTest(unittest.TestCase):
                 GroupType.RegularGroup,
                 GroupType.HiddenGroup]),
             dict)
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(
             self.groups.account.adapter.call,
-            ('GET', '/groups', {'group_types': [u"g", u"h"]}))
+            ('GET', '/groups', {'group_types': ["g", "h"]}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'member_group_id': 201}]
-        self.assertEquals(0, len(self.groups))
+        self.assertEqual(0, len(self.groups))
         self.groups.fetch_all()
-        self.assertEquals(1, len(self.groups))
+        self.assertEqual(1, len(self.groups))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'member_group_id': 201}]
         self.groups.fetch_all()
         self.groups.fetch_all()
-        self.assertEquals(self.groups.account.adapter.called, 1)
+        self.assertEqual(self.groups.account.adapter.called, 1)
 
     def test_group_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'member_group_id': 201}]
         self.groups.fetch_all()
         self.assertIsInstance(self.groups, AccountGroupCollection)
-        self.assertEquals(1, len(self.groups))
+        self.assertEqual(1, len(self.groups))
         self.assertIsInstance(self.groups[201], Group)
 
     def test_fetch_one_by_group_id_populates_collection(self):
@@ -249,32 +249,32 @@ class AccountGroupCollectionTest(unittest.TestCase):
         self.groups.find_one_by_group_id(201)
         self.assertIn(201, self.groups)
         self.assertIsInstance(self.groups[201], Group)
-        self.assertEquals(self.groups[201]['member_group_id'], 201)
+        self.assertEqual(self.groups[201]['member_group_id'], 201)
 
     def test_fetch_one_by_import_id_caches_result(self):
         MockAdapter.expected = {'member_group_id': 201}
         self.groups.find_one_by_group_id(201)
         self.groups.find_one_by_group_id(201)
-        self.assertEquals(self.groups.account.adapter.called, 1)
+        self.assertEqual(self.groups.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_import_id(self):
         MockAdapter.expected = {'member_group_id': 201}
         group = self.groups[201]
         self.assertIn(201, self.groups)
         self.assertIsInstance(group, Group)
-        self.assertEquals(self.groups[201]['member_group_id'], 201)
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.groups[201]['member_group_id'], 201)
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(
             self.groups.account.adapter.call,
             ('GET', '/groups/201', {}))
 
     def test_dictionary_access_lazy_loads_by_import_id2(self):
         MockAdapter.expected = None
         group = self.groups.get(204)
-        self.assertEquals(0, len(self.groups))
+        self.assertEqual(0, len(self.groups))
         self.assertIsNone(group)
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(
             self.groups.account.adapter.call,
             ('GET', '/groups/204', {}))
 
@@ -288,17 +288,17 @@ class AccountGroupCollectionTest(unittest.TestCase):
 
         del(self.groups[203])
 
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(
             self.groups.account.adapter.call,
             ('DELETE', '/groups/203', {}))
-        self.assertEquals(1, len(self.groups))
+        self.assertEqual(1, len(self.groups))
         self.assertIn(204, self.groups)
 
     def test_can_add_groups_in_bulk(self):
         result = self.groups.save()
         self.assertIsNone(result)
-        self.assertEquals(self.groups.account.adapter.called, 0)
+        self.assertEqual(self.groups.account.adapter.called, 0)
 
     def test_can_add_groups_in_bulk2(self):
         with self.assertRaises(ex.NoGroupNameError):
@@ -307,28 +307,28 @@ class AccountGroupCollectionTest(unittest.TestCase):
                 self.groups.factory()
             ])
 
-        self.assertEquals(self.groups.account.adapter.called, 0)
+        self.assertEqual(self.groups.account.adapter.called, 0)
 
     def test_can_add_groups_in_bulk3(self):
         # Setup
         MockAdapter.expected = [
-            {'member_group_id': 2010, 'group_name': u"Test Group 0"},
-            {'member_group_id': 2011, 'group_name': u"Test Group 1"}]
+            {'member_group_id': 2010, 'group_name': "Test Group 0"},
+            {'member_group_id': 2011, 'group_name': "Test Group 1"}]
 
         # Perform add
         result = self.groups.save([
-            self.groups.factory({'group_name': u"Test Group 0"}),
-            self.groups.factory({'group_name': u"Test Group 1"})
+            self.groups.factory({'group_name': "Test Group 0"}),
+            self.groups.factory({'group_name': "Test Group 1"})
         ])
 
         self.assertIsNone(result)
-        self.assertEquals(self.groups.account.adapter.called, 1)
-        self.assertEquals(self.groups.account.adapter.call, (
+        self.assertEqual(self.groups.account.adapter.called, 1)
+        self.assertEqual(self.groups.account.adapter.call, (
             'POST',
             '/groups',
             {'groups': [
-                {'group_name': u"Test Group 0"},
-                {'group_name': u"Test Group 1"}
+                {'group_name': "Test Group 0"},
+                {'group_name': "Test Group 1"}
             ]}
         ))
 
@@ -344,37 +344,37 @@ class AccountImportCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'import_id': 201}]
         self.assertIsInstance(self.imports.fetch_all(), dict)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('GET', '/members/imports', {}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'import_id': 201}]
-        self.assertEquals(0, len(self.imports))
+        self.assertEqual(0, len(self.imports))
         self.imports.fetch_all()
-        self.assertEquals(1, len(self.imports))
+        self.assertEqual(1, len(self.imports))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'import_id': 201}]
         self.imports.fetch_all()
         self.imports.fetch_all()
-        self.assertEquals(self.imports.account.adapter.called, 1)
+        self.assertEqual(self.imports.account.adapter.called, 1)
 
     def test_imports_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'import_id': 201}]
         self.imports.fetch_all()
         self.assertIsInstance(self.imports, AccountImportCollection)
-        self.assertEquals(1, len(self.imports))
+        self.assertEqual(1, len(self.imports))
         self.assertIsInstance(self.imports[201], MemberImport)
 
     def test_fetch_one_by_import_id_returns_an_import_object(self):
         MockAdapter.expected = {'import_id': 201}
         emma_import = self.imports.find_one_by_import_id(201)
         self.assertIsInstance(emma_import, MemberImport)
-        self.assertEquals(emma_import['import_id'], 201)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(emma_import['import_id'], 201)
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('GET', '/members/imports/201', {}))
 
@@ -383,32 +383,32 @@ class AccountImportCollectionTest(unittest.TestCase):
         self.imports.find_one_by_import_id(201)
         self.assertIn(201, self.imports)
         self.assertIsInstance(self.imports[201], MemberImport)
-        self.assertEquals(self.imports[201]['import_id'], 201)
+        self.assertEqual(self.imports[201]['import_id'], 201)
 
     def test_fetch_one_by_import_id_caches_result(self):
         MockAdapter.expected = {'import_id': 201}
         self.imports.find_one_by_import_id(201)
         self.imports.find_one_by_import_id(201)
-        self.assertEquals(self.imports.account.adapter.called, 1)
+        self.assertEqual(self.imports.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_import_id(self):
         MockAdapter.expected = {'import_id': 201}
         emma_import = self.imports[201]
         self.assertIn(201, self.imports)
         self.assertIsInstance(emma_import, MemberImport)
-        self.assertEquals(self.imports[201]['import_id'], 201)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports[201]['import_id'], 201)
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('GET', '/members/imports/201', {}))
 
     def test_dictionary_access_lazy_loads_by_import_id2(self):
         MockAdapter.expected = None
         emma_import = self.imports.get(204)
-        self.assertEquals(0, len(self.imports))
+        self.assertEqual(0, len(self.imports))
         self.assertIsNone(emma_import)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('GET', '/members/imports/204', {}))
 
@@ -422,11 +422,11 @@ class AccountImportCollectionTest(unittest.TestCase):
 
         del(self.imports[203])
 
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('DELETE', '/members/imports/delete', {'import_ids': [203]}))
-        self.assertEquals(1, len(self.imports))
+        self.assertEqual(1, len(self.imports))
         self.assertIn(204, self.imports)
 
     def test_can_mark_imports_as_deleted(self):
@@ -440,17 +440,17 @@ class AccountImportCollectionTest(unittest.TestCase):
 
         result = self.imports.delete([204, 205])
         self.assertIsNone(result)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('DELETE', '/members/imports/delete', {'import_ids': [204, 205]}))
-        self.assertEquals(1, len(self.imports))
+        self.assertEqual(1, len(self.imports))
         self.assertIn(203, self.imports)
 
     def test_can_mark_imports_as_deleted(self):
         result = self.imports.delete()
         self.assertIsNone(result)
-        self.assertEquals(self.imports.account.adapter.called, 0)
+        self.assertEqual(self.imports.account.adapter.called, 0)
 
     def test_can_mark_imports_as_deleted2(self):
         # Setup
@@ -464,11 +464,11 @@ class AccountImportCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.ImportDeleteError):
             self.imports.delete([204, 205])
 
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('DELETE', '/members/imports/delete', {'import_ids': [204, 205]}))
-        self.assertEquals(3, len(self.imports))
+        self.assertEqual(3, len(self.imports))
 
     def test_can_mark_imports_as_deleted3(self):
         # Setup
@@ -481,11 +481,11 @@ class AccountImportCollectionTest(unittest.TestCase):
 
         result = self.imports.delete([204, 205])
         self.assertIsNone(result)
-        self.assertEquals(self.imports.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.imports.account.adapter.called, 1)
+        self.assertEqual(
             self.imports.account.adapter.call,
             ('DELETE', '/members/imports/delete', {'import_ids': [204, 205]}))
-        self.assertEquals(1, len(self.imports))
+        self.assertEqual(1, len(self.imports))
         self.assertIn(203, self.imports)
 
 
@@ -502,8 +502,8 @@ class AccountMemberCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'member_id': 201}]
 
         self.assertIsInstance(self.members.fetch_all(), dict)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members', {}))
 
@@ -512,19 +512,19 @@ class AccountMemberCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'member_id': 201},{'member_id': 204}]
 
         self.assertIsInstance(self.members.fetch_all(deleted=True), dict)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members', {"deleted":True}))
 
     def test_fetch_all_populates_collection(self):
         # Setup
         MockAdapter.expected = [{'member_id': 201}]
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
 
         self.members.fetch_all()
 
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
 
     def test_fetch_all_caches_results(self):
         # Setup
@@ -533,7 +533,7 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members.fetch_all()
         self.members.fetch_all()
 
-        self.assertEquals(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.called, 1)
 
     def test_members_collection_object_can_be_accessed_like_a_dictionary(self):
         # Setup
@@ -542,7 +542,7 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members.fetch_all()
 
         self.assertIsInstance(self.members, AccountMemberCollection)
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
         self.assertIsInstance(self.members[201], Member)
 
     def test_fetch_all_by_import_id_returns_a_dictionary(self):
@@ -550,83 +550,83 @@ class AccountMemberCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'member_id': 201}]
 
         self.assertIsInstance(self.members.fetch_all_by_import_id(100), dict)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/imports/100/members', {}))
 
     def test_fetch_all_by_import_id_updates_collection(self):
         # Setup
         MockAdapter.expected = [{'member_id': 201}]
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
 
         self.members.fetch_all_by_import_id(100)
 
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
 
     def test_fetch_all_by_import_id_updates_collection2(self):
         # Setup
         self.members._dict = {
-            200: {'member_id': 200, 'email': u"test1@example.com"},
-            201: {'member_id': 201, 'email': u"test2@example.com"}
+            200: {'member_id': 200, 'email': "test1@example.com"},
+            201: {'member_id': 201, 'email': "test2@example.com"}
         }
         MockAdapter.expected = [
-            {'member_id': 201, 'email': u"test3@example.com"}
+            {'member_id': 201, 'email': "test3@example.com"}
         ]
-        self.assertEquals(2, len(self.members))
+        self.assertEqual(2, len(self.members))
 
         self.members.fetch_all_by_import_id(100)
 
-        self.assertEquals(2, len(self.members))
+        self.assertEqual(2, len(self.members))
         self.assertDictEqual(
             self.members._dict,
             {
-                200: {'member_id': 200, 'email': u"test1@example.com"},
-                201: {'member_id': 201, 'email': u"test3@example.com"}
+                200: {'member_id': 200, 'email': "test1@example.com"},
+                201: {'member_id': 201, 'email': "test3@example.com"}
             }
         )
 
     def test_fetch_all_by_import_id_updates_collection3(self):
         # Setup
         self.members._dict = {
-            200: {'member_id': 200, 'email': u"test1@example.com"},
-            201: {'member_id': 201, 'email': u"test2@example.com"}
+            200: {'member_id': 200, 'email': "test1@example.com"},
+            201: {'member_id': 201, 'email': "test2@example.com"}
         }
         MockAdapter.expected = [
-            {'member_id': 201, 'email': u"test3@example.com"},
-            {'member_id': 202, 'email': u"test4@example.com"}
+            {'member_id': 201, 'email': "test3@example.com"},
+            {'member_id': 202, 'email': "test4@example.com"}
         ]
-        self.assertEquals(2, len(self.members))
+        self.assertEqual(2, len(self.members))
 
         self.members.fetch_all_by_import_id(100)
 
-        self.assertEquals(3, len(self.members))
+        self.assertEqual(3, len(self.members))
         self.assertDictEqual(
             self.members._dict,
             {
-                200: {'member_id': 200, 'email': u"test1@example.com"},
-                201: {'member_id': 201, 'email': u"test3@example.com"},
-                202: {'member_id': 202, 'email': u"test4@example.com"}
+                200: {'member_id': 200, 'email': "test1@example.com"},
+                201: {'member_id': 201, 'email': "test3@example.com"},
+                202: {'member_id': 202, 'email': "test4@example.com"}
             }
         )
 
     def test_fetch_all_by_import_id_updates_collection4(self):
         # Setup
         self.members._dict = {
-            201: {'member_id': 201, 'email': u"test2@example.com"}
+            201: {'member_id': 201, 'email': "test2@example.com"}
         }
         MockAdapter.expected = [
-            {'member_id': 201, 'email': u"test3@example.com"}
+            {'member_id': 201, 'email': "test3@example.com"}
         ]
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
 
         self.members.fetch_all_by_import_id(100)
 
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
         self.assertDictEqual(
             self.members._dict,
             {
-                201: {'member_id': 201, 'email': u"test3@example.com"}
+                201: {'member_id': 201, 'email': "test3@example.com"}
             }
         )
 
@@ -637,7 +637,7 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members.fetch_all_by_import_id(100)
         self.members.fetch_all_by_import_id(100)
 
-        self.assertEquals(self.members.account.adapter.called, 2)
+        self.assertEqual(self.members.account.adapter.called, 2)
 
     def test_fetch_one_by_member_id_returns_a_member_object(self):
         # Setup
@@ -646,9 +646,9 @@ class AccountMemberCollectionTest(unittest.TestCase):
         member = self.members.find_one_by_member_id(201)
 
         self.assertIsInstance(member, Member)
-        self.assertEquals(member['member_id'], 201)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['member_id'], 201)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/201', {}))
 
@@ -659,9 +659,9 @@ class AccountMemberCollectionTest(unittest.TestCase):
         member = self.members.find_one_by_member_id(204, deleted=True)
 
         self.assertIsInstance(member, Member)
-        self.assertEquals(member['member_id'], 204)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['member_id'], 204)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/204', {"deleted":True}))
 
@@ -673,7 +673,7 @@ class AccountMemberCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.members)
         self.assertIsInstance(self.members[201], Member)
-        self.assertEquals(self.members[201]['member_id'], 201)
+        self.assertEqual(self.members[201]['member_id'], 201)
 
     def test_fetch_one_by_member_id_caches_result(self):
         # Setup
@@ -682,7 +682,7 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members.find_one_by_member_id(201)
         self.members.find_one_by_member_id(201)
 
-        self.assertEquals(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_member_id(self):
         # Setup
@@ -692,9 +692,9 @@ class AccountMemberCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.members)
         self.assertIsInstance(member, Member)
-        self.assertEquals(self.members[201]['member_id'], 201)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members[201]['member_id'], 201)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/201', {}))
 
@@ -704,85 +704,85 @@ class AccountMemberCollectionTest(unittest.TestCase):
 
         member = self.members.get(204)
 
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
         self.assertIsNone(member)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/204', {}))
 
     def test_fetch_one_by_email_returns_a_member_object(self):
         # Setup
-        MockAdapter.expected = {'member_id': 201, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 201, 'email': "test@example.com"}
 
         member = self.members.find_one_by_email("test@example.com")
 
         self.assertIsInstance(member, Member)
-        self.assertEquals(member['member_id'], 201)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['member_id'], 201)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {}))
 
     def test_fetch_one_by_email_returns_a_member_object2(self):
         # Setup
-        MockAdapter.expected = {'member_id': 204, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 204, 'email': "test@example.com"}
 
         member = self.members.find_one_by_email("test@example.com", deleted=True)
 
         self.assertIsInstance(member, Member)
-        self.assertEquals(member['member_id'], 204)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(member['member_id'], 204)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {"deleted":True}))
 
     def test_fetch_one_by_email_populates_collection(self):
         # Setup
-        MockAdapter.expected = {'member_id': 201, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 201, 'email': "test@example.com"}
 
         self.members.find_one_by_email("test@example.com")
 
         self.assertIn(201, self.members)
         self.assertIsInstance(self.members[201], Member)
-        self.assertEquals(self.members[201]['member_id'], 201)
+        self.assertEqual(self.members[201]['member_id'], 201)
 
     def test_fetch_one_by_email_caches_result(self):
         # Setup
-        MockAdapter.expected = {'member_id': 201, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 201, 'email': "test@example.com"}
 
         self.members.find_one_by_email("test@example.com")
         self.members.find_one_by_email("test@example.com")
 
-        self.assertEquals(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_email(self):
         # Setup
-        MockAdapter.expected = {'member_id': 201, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 201, 'email': "test@example.com"}
 
         member = self.members["test@example.com"]
 
         self.assertIn(201, self.members)
         self.assertIsInstance(member, Member)
-        self.assertEquals(self.members[201]['member_id'], 201)
-        self.assertEquals(self.members[201]['email'], u"test@example.com")
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members[201]['member_id'], 201)
+        self.assertEqual(self.members[201]['email'], "test@example.com")
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {}))
 
     def test_dictionary_access_lazy_loads_by_email2(self):
         # Setup
-        MockAdapter.expected = {'member_id': 201, 'email': u"test@example.com"}
+        MockAdapter.expected = {'member_id': 201, 'email': "test@example.com"}
 
-        member = self.members[u"test@example.com"]
+        member = self.members["test@example.com"]
 
         self.assertIn(201, self.members)
         self.assertIsInstance(member, Member)
-        self.assertEquals(self.members[201]['member_id'], 201)
-        self.assertEquals(self.members[201]['email'], u"test@example.com")
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members[201]['member_id'], 201)
+        self.assertEqual(self.members[201]['email'], "test@example.com")
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {}))
 
@@ -792,10 +792,10 @@ class AccountMemberCollectionTest(unittest.TestCase):
 
         member = self.members.get("test@example.com")
 
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
         self.assertIsNone(member)
-        self.assertEquals(1, self.members.account.adapter.called)
-        self.assertEquals(
+        self.assertEqual(1, self.members.account.adapter.called)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {}))
 
@@ -803,12 +803,12 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = None
 
-        member = self.members.get(u"test@example.com")
+        member = self.members.get("test@example.com")
 
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
         self.assertIsNone(member)
-        self.assertEquals(1, self.members.account.adapter.called)
-        self.assertEquals(
+        self.assertEqual(1, self.members.account.adapter.called)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('GET', '/members/email/test@example.com', {}))
 
@@ -816,14 +816,14 @@ class AccountMemberCollectionTest(unittest.TestCase):
         MockAdapter.expected = {'import_id': 1024}
         import_id = self.members.save()
         self.assertIsNone(import_id)
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_add_members_in_bulk2(self):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
 
         # Attempt save
@@ -833,41 +833,41 @@ class AccountMemberCollectionTest(unittest.TestCase):
                 Member(self.members.account)
             ])
 
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_add_members_in_bulk3(self):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
 
         # Perform add
         import_id = self.members.save([
             self.members.factory({
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             self.members.factory({
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         ])
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
                 'members': [
-                    {'email': u"test1@example.com"},
+                    {'email': "test1@example.com"},
                     {
-                        'email': u"test2@example.com",
-                        'fields': {'first_name': u"Emma"}
+                        'email': "test2@example.com",
+                        'fields': {'first_name': "Emma"}
                     }
                 ]
             }
@@ -877,19 +877,19 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
@@ -897,21 +897,21 @@ class AccountMemberCollectionTest(unittest.TestCase):
         import_id = self.members.save()
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
                 'members': [
                     {
                         'member_id': 200,
-                        'email': u"test1@example.com"},
+                        'email': "test1@example.com"},
                     {
                         'member_id': 201,
-                        'email': u"test2@example.com",
-                        'fields': {'first_name': u"Emma"}}
+                        'email': "test2@example.com",
+                        'fields': {'first_name': "Emma"}}
                 ]
             }
         ))
@@ -920,40 +920,40 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             })
         }
 
         # Perform add & update
         import_id = self.members.save([
             self.members.factory({
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         ])
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
                 'members': [
                     {
-                        'email': u"test2@example.com",
-                        'fields': {'first_name': u"Emma"}},
+                        'email': "test2@example.com",
+                        'fields': {'first_name': "Emma"}},
                     {
                         'member_id': 200,
-                        'email': u"test1@example.com"}
+                        'email': "test1@example.com"}
 
                 ]
             }
@@ -963,34 +963,34 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
 
         # Perform save with "add-only"
         import_id = self.members.save([
             self.members.factory({
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             self.members.factory({
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         ], add_only=True)
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
                 'members': [
-                    {'email': u"test1@example.com"},
-                    {'email': u"test2@example.com",
-                     'fields': {'first_name': u"Emma"}}
+                    {'email': "test1@example.com"},
+                    {'email': "test2@example.com",
+                     'fields': {'first_name': "Emma"}}
                 ],
                 'add_only': True
             }
@@ -1000,19 +1000,19 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
@@ -1020,43 +1020,43 @@ class AccountMemberCollectionTest(unittest.TestCase):
         import_id = self.members.save(add_only=True)
 
         self.assertIsNone(import_id, None)
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_add_members_in_bulk8(self):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             })
         }
 
         # Perform save with "add-only"
         import_id = self.members.save([
             self.members.factory({
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         ], add_only=True)
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
                 'members': [
                     {
-                        'email': u"test2@example.com",
-                        'fields': {'first_name': u"Emma"}}
+                        'email': "test2@example.com",
+                        'fields': {'first_name': "Emma"}}
 
                 ],
                 'add_only': True
@@ -1067,27 +1067,27 @@ class AccountMemberCollectionTest(unittest.TestCase):
         # Setup
         MockAdapter.expected = {'import_id': 1024}
         self.members.account.fields._dict = {
-            2000: {'shortcut_name': u"first_name"},
-            2001: {'shortcut_name': u"last_name"}
+            2000: {'shortcut_name': "first_name"},
+            2001: {'shortcut_name': "last_name"}
         }
 
         # Perform add
         import_id = self.members.save([
             self.members.factory({
-                'email': u"test1@example.com"
+                'email': "test1@example.com"
             })
         ], filename="test.csv", group_ids=[300, 301, 302])
 
         self.assertIsInstance(import_id, dict)
-        self.assertTrue(import_id.has_key('import_id'))
-        self.assertEquals(import_id['import_id'], 1024)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertTrue('import_id' in import_id)
+        self.assertEqual(import_id['import_id'], 1024)
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'POST',
             '/members',
             {
-                'members': [{'email': u"test1@example.com"}],
-                'filename': u"test.csv",
+                'members': [{'email': "test1@example.com"}],
+                'filename': "test.csv",
                 'group_ids': [300, 301, 302]
             }
         ))
@@ -1098,23 +1098,23 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
         del(self.members[200])
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
             ('DELETE', '/members/200', {}))
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
         self.assertIn(201, self.members)
 
     def test_can_delete_members_in_bulk(self):
@@ -1123,22 +1123,22 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
         with self.assertRaises(ex.MemberDeleteError):
             self.members.delete([200, 201])
 
-        self.assertEquals(2, len(self.members))
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(2, len(self.members))
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/delete',
             {'member_ids': [200, 201]}
@@ -1150,25 +1150,25 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
         self.members.delete([200])
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/delete',
             {'member_ids': [200]}
         ))
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
         self.assertNotIn(200, self.members)
         self.assertIsInstance(self.members[201], Member)
 
@@ -1178,44 +1178,44 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
         self.members.delete([200, 201])
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/delete',
             {'member_ids': [200, 201]}
             ))
-        self.assertEquals(0, len(self.members))
+        self.assertEqual(0, len(self.members))
 
     def test_can_delete_members_in_bulk4(self):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
-                'does_not_exist': u"A member field which does not exist"
+                'email': "test1@example.com",
+                'does_not_exist': "A member field which does not exist"
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
-                'first_name': u"Emma"
+                'email': "test2@example.com",
+                'first_name': "Emma"
             })
         }
 
         self.members.delete()
 
-        self.assertEquals(self.members.account.adapter.called, 0)
-        self.assertEquals(2, len(self.members))
+        self.assertEqual(self.members.account.adapter.called, 0)
+        self.assertEqual(2, len(self.members))
 
     def test_can_delete_members_by_status(self):
         # Setup
@@ -1223,12 +1223,12 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'member_status_id': MemberStatus.Active
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'member_status_id': MemberStatus.OptOut
             })
         }
@@ -1236,11 +1236,11 @@ class AccountMemberCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.MemberDeleteError):
             self.members.delete_by_status(MemberStatus.OptOut)
 
-        self.assertEquals(2, len(self.members))
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(2, len(self.members))
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
-            ('DELETE', '/members', {'member_status_id': u"o"})
+            ('DELETE', '/members', {'member_status_id': "o"})
         )
 
     def test_can_delete_members_by_status2(self):
@@ -1249,12 +1249,12 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'member_status_id': MemberStatus.Active
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'member_status_id': MemberStatus.OptOut
             })
         }
@@ -1262,17 +1262,17 @@ class AccountMemberCollectionTest(unittest.TestCase):
         result = self.members.delete_by_status(MemberStatus.OptOut)
 
         self.assertIsNone(result)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(
             self.members.account.adapter.call,
-            ('DELETE', '/members', {'member_status_id': u"o"})
+            ('DELETE', '/members', {'member_status_id': "o"})
         )
-        self.assertEquals(1, len(self.members))
+        self.assertEqual(1, len(self.members))
         self.assertIsInstance(self.members[200], Member)
 
     def test_can_change_status_of_members_in_bulk(self):
         self.members.change_status_by_member_id()
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_change_status_of_members_in_bulk2(self):
         # Setup
@@ -1280,12 +1280,12 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'status': MemberStatus.Active
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'status': MemberStatus.Active
             })
         }
@@ -1293,11 +1293,11 @@ class AccountMemberCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.MemberChangeStatusError):
             self.members.change_status_by_member_id([200, 201], MemberStatus.OptOut)
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/status',
-            {'member_ids': [200, 201], 'status_to': u"o"}
+            {'member_ids': [200, 201], 'status_to': "o"}
         ))
 
     def test_can_change_status_of_members_in_bulk3(self):
@@ -1306,27 +1306,27 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'status': MemberStatus.Active
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'status': MemberStatus.Active
             })
         }
 
         self.members.change_status_by_member_id([200], MemberStatus.OptOut)
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/status',
-            {'member_ids': [200], 'status_to': u"o"}
+            {'member_ids': [200], 'status_to': "o"}
         ))
-        self.assertEquals(2, len(self.members))
-        self.assertEquals(MemberStatus.OptOut, self.members[200]['status'])
-        self.assertEquals(MemberStatus.Active, self.members[201]['status'])
+        self.assertEqual(2, len(self.members))
+        self.assertEqual(MemberStatus.OptOut, self.members[200]['status'])
+        self.assertEqual(MemberStatus.Active, self.members[201]['status'])
 
     def test_can_change_status_of_members_in_bulk4(self):
         # Setup
@@ -1334,27 +1334,27 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'status': MemberStatus.Active
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'status': MemberStatus.Active
             })
         }
 
         self.members.change_status_by_member_id([200, 201], MemberStatus.OptOut)
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/status',
-            {'member_ids': [200, 201], 'status_to': u"o"}
+            {'member_ids': [200, 201], 'status_to': "o"}
             ))
-        self.assertEquals(2, len(self.members))
-        self.assertEquals(MemberStatus.OptOut, self.members[200]['status'])
-        self.assertEquals(MemberStatus.OptOut, self.members[201]['status'])
+        self.assertEqual(2, len(self.members))
+        self.assertEqual(MemberStatus.OptOut, self.members[200]['status'])
+        self.assertEqual(MemberStatus.OptOut, self.members[201]['status'])
 
     def test_can_change_status_of_members_in_bulk5(self):
         # Setup
@@ -1362,27 +1362,27 @@ class AccountMemberCollectionTest(unittest.TestCase):
         self.members._dict = {
             200: Member(self.members.account, {
                 'member_id': 200,
-                'email': u"test1@example.com",
+                'email': "test1@example.com",
                 'status': MemberStatus.Error
             }),
             201: Member(self.members.account, {
                 'member_id': 201,
-                'email': u"test2@example.com",
+                'email': "test2@example.com",
                 'status': MemberStatus.Error
             })
         }
 
         self.members.change_status_by_member_id([200, 201])
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/status',
-            {'member_ids': [200, 201], 'status_to': u"a"}
+            {'member_ids': [200, 201], 'status_to': "a"}
             ))
-        self.assertEquals(2, len(self.members))
-        self.assertEquals(MemberStatus.Active, self.members[200]['status'])
-        self.assertEquals(MemberStatus.Active, self.members[201]['status'])
+        self.assertEqual(2, len(self.members))
+        self.assertEqual(MemberStatus.Active, self.members[200]['status'])
+        self.assertEqual(MemberStatus.Active, self.members[201]['status'])
 
     def test_can_change_status_of_members_in_bulk6(self):
         MockAdapter.expected = False
@@ -1391,8 +1391,8 @@ class AccountMemberCollectionTest(unittest.TestCase):
             self.members.change_status_by_status(
                 MemberStatus.Error,
                 MemberStatus.Active)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call,
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call,
             ('PUT', '/members/status/e/to/a', {}))
 
     def test_can_change_status_of_members_in_bulk7(self):
@@ -1401,8 +1401,8 @@ class AccountMemberCollectionTest(unittest.TestCase):
             MemberStatus.Error,
             MemberStatus.Active)
         self.assertIsNone(result)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call,
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call,
             ('PUT', '/members/status/e/to/a', {}))
 
     def test_can_change_status_of_members_in_bulk8(self):
@@ -1413,21 +1413,21 @@ class AccountMemberCollectionTest(unittest.TestCase):
             MemberStatus.Active,
             200)
         self.assertIsNone(result)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call,
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call,
             ('PUT', '/members/status/e/to/a', {'group_id': 200}))
 
     def test_can_drop_groups_of_members_in_bulk(self):
         self.members.drop_groups()
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_drop_groups_of_members_in_bulk2(self):
         self.members.drop_groups([123, 321])
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_drop_groups_of_members_in_bulk3(self):
         self.members.drop_groups([], [1024, 1025])
-        self.assertEquals(self.members.account.adapter.called, 0)
+        self.assertEqual(self.members.account.adapter.called, 0)
 
     def test_can_drop_groups_of_members_in_bulk4(self):
         MockAdapter.expected = False
@@ -1435,8 +1435,8 @@ class AccountMemberCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.MemberDropGroupError):
             self.members.drop_groups([123, 321], [1024, 1025])
 
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/groups/remove',
             {'member_ids': [123, 321], 'group_ids': [1024, 1025]}
@@ -1448,8 +1448,8 @@ class AccountMemberCollectionTest(unittest.TestCase):
         result = self.members.drop_groups([123, 321], [1024, 1025])
 
         self.assertIsNone(result)
-        self.assertEquals(self.members.account.adapter.called, 1)
-        self.assertEquals(self.members.account.adapter.call, (
+        self.assertEqual(self.members.account.adapter.called, 1)
+        self.assertEqual(self.members.account.adapter.call, (
             'PUT',
             '/members/groups/remove',
             {'member_ids': [123, 321], 'group_ids': [1024, 1025]}
@@ -1470,8 +1470,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'mailing_id': 201}]
         self.assertIsInstance(self.mailings.fetch_all(), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {}))
 
@@ -1480,8 +1480,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'mailing_id': 201},{'mailing_id': 204}]
 
         self.assertIsInstance(self.mailings.fetch_all(include_archived=True), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"include_archived":True}))
 
@@ -1491,8 +1491,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
 
         self.assertIsInstance(
             self.mailings.fetch_all(mailing_types=[MailingType.Standard]), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"mailing_types":["m"]}))
 
@@ -1503,8 +1503,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
         self.assertIsInstance(
             self.mailings.fetch_all(mailing_statuses=[MailingStatus.Complete]),
             dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"mailing_statuses":["c"]}))
 
@@ -1513,8 +1513,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'mailing_id': 201},{'mailing_id': 204}]
 
         self.assertIsInstance(self.mailings.fetch_all(is_scheduled=True), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"is_scheduled":True}))
 
@@ -1523,8 +1523,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'mailing_id': 201},{'mailing_id': 204}]
 
         self.assertIsInstance(self.mailings.fetch_all(with_html_body=True), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"with_html_body":True}))
 
@@ -1533,28 +1533,28 @@ class AccountMailingCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'mailing_id': 201},{'mailing_id': 204}]
 
         self.assertIsInstance(self.mailings.fetch_all(with_plaintext=True), dict)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings', {"with_plaintext":True}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'mailing_id': 201}]
-        self.assertEquals(0, len(self.mailings))
+        self.assertEqual(0, len(self.mailings))
         self.mailings.fetch_all()
-        self.assertEquals(1, len(self.mailings))
+        self.assertEqual(1, len(self.mailings))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'mailing_id': 201}]
         self.mailings.fetch_all()
         self.mailings.fetch_all()
-        self.assertEquals(self.mailings.account.adapter.called, 1)
+        self.assertEqual(self.mailings.account.adapter.called, 1)
 
     def test_mailing_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'mailing_id': 201}]
         self.mailings.fetch_all()
         self.assertIsInstance(self.mailings, AccountMailingCollection)
-        self.assertEquals(1, len(self.mailings))
+        self.assertEqual(1, len(self.mailings))
         self.assertIsInstance(self.mailings[201], Mailing)
 
     def test_fetch_one_by_mailing_id_returns_a_mailing_object(self):
@@ -1564,9 +1564,9 @@ class AccountMailingCollectionTest(unittest.TestCase):
         mailing = self.mailings.find_one_by_mailing_id(201)
 
         self.assertIsInstance(mailing, Mailing)
-        self.assertEquals(mailing['mailing_id'], 201)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(mailing['mailing_id'], 201)
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings/201', {}))
 
@@ -1578,7 +1578,7 @@ class AccountMailingCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.mailings)
         self.assertIsInstance(self.mailings[201], Mailing)
-        self.assertEquals(self.mailings[201]['mailing_id'], 201)
+        self.assertEqual(self.mailings[201]['mailing_id'], 201)
 
     def test_fetch_one_by_mailing_id_caches_result(self):
         # Setup
@@ -1587,7 +1587,7 @@ class AccountMailingCollectionTest(unittest.TestCase):
         self.mailings.find_one_by_mailing_id(201)
         self.mailings.find_one_by_mailing_id(201)
 
-        self.assertEquals(self.mailings.account.adapter.called, 1)
+        self.assertEqual(self.mailings.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_mailing_id(self):
         # Setup
@@ -1597,9 +1597,9 @@ class AccountMailingCollectionTest(unittest.TestCase):
 
         self.assertIn(201, self.mailings)
         self.assertIsInstance(mailing, Mailing)
-        self.assertEquals(self.mailings[201]['mailing_id'], 201)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings[201]['mailing_id'], 201)
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings/201', {}))
 
@@ -1609,10 +1609,10 @@ class AccountMailingCollectionTest(unittest.TestCase):
 
         mailing = self.mailings.get(204)
 
-        self.assertEquals(0, len(self.mailings))
+        self.assertEqual(0, len(self.mailings))
         self.assertIsNone(mailing)
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('GET', '/mailings/204', {}))
 
@@ -1621,8 +1621,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
 
         valid = self.mailings.validate(subject="Test Subject")
 
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('POST', '/mailings/validate', {'subject':"Test Subject"}))
         self.assertTrue(valid)
@@ -1635,8 +1635,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.SyntaxValidationError) as e:
             self.mailings.validate(subject="Test Subject")
 
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             ('POST', '/mailings/validate', {'subject':"Test Subject"}))
         self.assertIsInstance(e.exception.message, MockResponse)
@@ -1650,8 +1650,8 @@ class AccountMailingCollectionTest(unittest.TestCase):
             subject="Test Subject"
         )
 
-        self.assertEquals(self.mailings.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.account.adapter.call,
             (
                 'POST',
@@ -1666,7 +1666,7 @@ class AccountMailingCollectionTest(unittest.TestCase):
     def test_can_validate_tag_syntax4(self):
         valid = self.mailings.validate()
 
-        self.assertEquals(self.mailings.account.adapter.called, 0)
+        self.assertEqual(self.mailings.account.adapter.called, 0)
         self.assertFalse(valid)
 
 
@@ -1681,8 +1681,8 @@ class AccountSearchCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'search_id': 201}]
         self.assertIsInstance(self.searches.fetch_all(), dict)
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('GET', '/searches', {}))
 
@@ -1691,37 +1691,37 @@ class AccountSearchCollectionTest(unittest.TestCase):
         MockAdapter.expected = [{'search_id': 201},{'search_id': 204}]
 
         self.assertIsInstance(self.searches.fetch_all(deleted=True), dict)
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('GET', '/searches', {"deleted":True}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'search_id': 201}]
-        self.assertEquals(0, len(self.searches))
+        self.assertEqual(0, len(self.searches))
         self.searches.fetch_all()
-        self.assertEquals(1, len(self.searches))
+        self.assertEqual(1, len(self.searches))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'search_id': 201}]
         self.searches.fetch_all()
         self.searches.fetch_all()
-        self.assertEquals(self.searches.account.adapter.called, 1)
+        self.assertEqual(self.searches.account.adapter.called, 1)
 
     def test_search_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'search_id': 201}]
         self.searches.fetch_all()
         self.assertIsInstance(self.searches, AccountSearchCollection)
-        self.assertEquals(1, len(self.searches))
+        self.assertEqual(1, len(self.searches))
         self.assertIsInstance(self.searches[201], Search)
 
     def test_find_one_by_search_id_returns_an_import_object(self):
         MockAdapter.expected = {'search_id': 201}
         search = self.searches.find_one_by_search_id(201)
         self.assertIsInstance(search, Search)
-        self.assertEquals(search['search_id'], 201)
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(search['search_id'], 201)
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('GET', '/searches/201', {}))
 
@@ -1730,32 +1730,32 @@ class AccountSearchCollectionTest(unittest.TestCase):
         self.searches.find_one_by_search_id(201)
         self.assertIn(201, self.searches)
         self.assertIsInstance(self.searches[201], Search)
-        self.assertEquals(self.searches[201]['search_id'], 201)
+        self.assertEqual(self.searches[201]['search_id'], 201)
 
     def test_find_one_by_search_id_caches_result(self):
         MockAdapter.expected = {'search_id': 201}
         self.searches.find_one_by_search_id(201)
         self.searches.find_one_by_search_id(201)
-        self.assertEquals(self.searches.account.adapter.called, 1)
+        self.assertEqual(self.searches.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_search_id(self):
         MockAdapter.expected = {'search_id': 201}
         search = self.searches[201]
         self.assertIn(201, self.searches)
         self.assertIsInstance(search, Search)
-        self.assertEquals(self.searches[201]['search_id'], 201)
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.searches[201]['search_id'], 201)
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('GET', '/searches/201', {}))
 
     def test_dictionary_access_lazy_loads_by_search_id2(self):
         MockAdapter.expected = None
         search = self.searches.get(204)
-        self.assertEquals(0, len(self.searches))
+        self.assertEqual(0, len(self.searches))
         self.assertIsNone(search)
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('GET', '/searches/204', {}))
 
@@ -1769,11 +1769,11 @@ class AccountSearchCollectionTest(unittest.TestCase):
 
         del(self.searches[200])
 
-        self.assertEquals(self.searches.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.searches.account.adapter.called, 1)
+        self.assertEqual(
             self.searches.account.adapter.call,
             ('DELETE', '/searches/200', {}))
-        self.assertEquals(1, len(self.searches))
+        self.assertEqual(1, len(self.searches))
         self.assertIn(201, self.searches)
 
 
@@ -1788,37 +1788,37 @@ class AccountTriggerCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'trigger_id': 201}]
         self.assertIsInstance(self.triggers.fetch_all(), dict)
-        self.assertEquals(self.triggers.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.triggers.account.adapter.called, 1)
+        self.assertEqual(
             self.triggers.account.adapter.call,
             ('GET', '/triggers', {}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'trigger_id': 201}]
-        self.assertEquals(0, len(self.triggers))
+        self.assertEqual(0, len(self.triggers))
         self.triggers.fetch_all()
-        self.assertEquals(1, len(self.triggers))
+        self.assertEqual(1, len(self.triggers))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'trigger_id': 201}]
         self.triggers.fetch_all()
         self.triggers.fetch_all()
-        self.assertEquals(self.triggers.account.adapter.called, 1)
+        self.assertEqual(self.triggers.account.adapter.called, 1)
 
     def test_trigger_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'trigger_id': 201}]
         self.triggers.fetch_all()
         self.assertIsInstance(self.triggers, AccountTriggerCollection)
-        self.assertEquals(1, len(self.triggers))
+        self.assertEqual(1, len(self.triggers))
         self.assertIsInstance(self.triggers[201], Trigger)
 
     def test_find_one_by_trigger_id_returns_an_import_object(self):
         MockAdapter.expected = {'trigger_id': 201}
         search = self.triggers.find_one_by_trigger_id(201)
         self.assertIsInstance(search, Trigger)
-        self.assertEquals(search['trigger_id'], 201)
-        self.assertEquals(self.triggers.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(search['trigger_id'], 201)
+        self.assertEqual(self.triggers.account.adapter.called, 1)
+        self.assertEqual(
             self.triggers.account.adapter.call,
             ('GET', '/triggers/201', {}))
 
@@ -1827,32 +1827,32 @@ class AccountTriggerCollectionTest(unittest.TestCase):
         self.triggers.find_one_by_trigger_id(201)
         self.assertIn(201, self.triggers)
         self.assertIsInstance(self.triggers[201], Trigger)
-        self.assertEquals(self.triggers[201]['trigger_id'], 201)
+        self.assertEqual(self.triggers[201]['trigger_id'], 201)
 
     def test_find_one_by_trigger_id_caches_result(self):
         MockAdapter.expected = {'trigger_id': 201}
         self.triggers.find_one_by_trigger_id(201)
         self.triggers.find_one_by_trigger_id(201)
-        self.assertEquals(self.triggers.account.adapter.called, 1)
+        self.assertEqual(self.triggers.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_trigger_id(self):
         MockAdapter.expected = {'trigger_id': 201}
         trigger = self.triggers[201]
         self.assertIn(201, self.triggers)
         self.assertIsInstance(trigger, Trigger)
-        self.assertEquals(self.triggers[201]['trigger_id'], 201)
-        self.assertEquals(self.triggers.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.triggers[201]['trigger_id'], 201)
+        self.assertEqual(self.triggers.account.adapter.called, 1)
+        self.assertEqual(
             self.triggers.account.adapter.call,
             ('GET', '/triggers/201', {}))
 
     def test_dictionary_access_lazy_loads_by_trigger_id2(self):
         MockAdapter.expected = None
         search = self.triggers.get(204)
-        self.assertEquals(0, len(self.triggers))
+        self.assertEqual(0, len(self.triggers))
         self.assertIsNone(search)
-        self.assertEquals(self.triggers.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.triggers.account.adapter.called, 1)
+        self.assertEqual(
             self.triggers.account.adapter.call,
             ('GET', '/triggers/204', {}))
 
@@ -1866,11 +1866,11 @@ class AccountTriggerCollectionTest(unittest.TestCase):
 
         del(self.triggers[200])
 
-        self.assertEquals(self.triggers.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.triggers.account.adapter.called, 1)
+        self.assertEqual(
             self.triggers.account.adapter.call,
             ('DELETE', '/triggers/200', {}))
-        self.assertEquals(1, len(self.triggers))
+        self.assertEqual(1, len(self.triggers))
         self.assertIn(201, self.triggers)
 
 
@@ -1885,37 +1885,37 @@ class AccountWebHookCollectionTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'webhook_id': 201}]
         self.assertIsInstance(self.webhooks.fetch_all(), dict)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('GET', '/webhooks', {}))
 
     def test_fetch_all_populates_collection(self):
         MockAdapter.expected = [{'webhook_id': 201}]
-        self.assertEquals(0, len(self.webhooks))
+        self.assertEqual(0, len(self.webhooks))
         self.webhooks.fetch_all()
-        self.assertEquals(1, len(self.webhooks))
+        self.assertEqual(1, len(self.webhooks))
 
     def test_fetch_all_caches_results(self):
         MockAdapter.expected = [{'webhook_id': 201}]
         self.webhooks.fetch_all()
         self.webhooks.fetch_all()
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
 
     def test_webhook_collection_object_can_be_accessed_like_a_dictionary(self):
         MockAdapter.expected = [{'webhook_id': 201}]
         self.webhooks.fetch_all()
         self.assertIsInstance(self.webhooks, AccountWebHookCollection)
-        self.assertEquals(1, len(self.webhooks))
+        self.assertEqual(1, len(self.webhooks))
         self.assertIsInstance(self.webhooks[201], WebHook)
 
     def test_find_one_by_webhook_id_returns_an_import_object(self):
         MockAdapter.expected = {'webhook_id': 201}
         webhook = self.webhooks.find_one_by_webhook_id(201)
         self.assertIsInstance(webhook, WebHook)
-        self.assertEquals(webhook['webhook_id'], 201)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(webhook['webhook_id'], 201)
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('GET', '/webhooks/201', {}))
 
@@ -1924,32 +1924,32 @@ class AccountWebHookCollectionTest(unittest.TestCase):
         self.webhooks.find_one_by_webhook_id(201)
         self.assertIn(201, self.webhooks)
         self.assertIsInstance(self.webhooks[201], WebHook)
-        self.assertEquals(self.webhooks[201]['webhook_id'], 201)
+        self.assertEqual(self.webhooks[201]['webhook_id'], 201)
 
     def test_find_one_by_webhook_id_caches_result(self):
         MockAdapter.expected = {'webhook_id': 201}
         self.webhooks.find_one_by_webhook_id(201)
         self.webhooks.find_one_by_webhook_id(201)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
 
     def test_dictionary_access_lazy_loads_by_webhook_id(self):
         MockAdapter.expected = {'webhook_id': 201}
         webhook = self.webhooks[201]
         self.assertIn(201, self.webhooks)
         self.assertIsInstance(webhook, WebHook)
-        self.assertEquals(self.webhooks[201]['webhook_id'], 201)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks[201]['webhook_id'], 201)
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('GET', '/webhooks/201', {}))
 
     def test_dictionary_access_lazy_loads_by_webhook_id2(self):
         MockAdapter.expected = None
         webhook = self.webhooks.get(204)
-        self.assertEquals(0, len(self.webhooks))
+        self.assertEqual(0, len(self.webhooks))
         self.assertIsNone(webhook)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('GET', '/webhooks/204', {}))
 
@@ -1963,11 +1963,11 @@ class AccountWebHookCollectionTest(unittest.TestCase):
 
         del(self.webhooks[200])
 
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('DELETE', '/webhooks/200', {}))
-        self.assertEquals(1, len(self.webhooks))
+        self.assertEqual(1, len(self.webhooks))
         self.assertIn(201, self.webhooks)
 
     def test_can_delete_all_webhooks(self):
@@ -1981,11 +1981,11 @@ class AccountWebHookCollectionTest(unittest.TestCase):
         result = self.webhooks.delete_all()
 
         self.assertIsNone(result)
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('DELETE', '/webhooks', {}))
-        self.assertEquals(0, len(self.webhooks))
+        self.assertEqual(0, len(self.webhooks))
 
     def test_can_delete_all_webhooks2(self):
         # Setup
@@ -1998,11 +1998,11 @@ class AccountWebHookCollectionTest(unittest.TestCase):
         with self.assertRaises(ex.WebHookDeleteError):
             self.webhooks.delete_all()
 
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('DELETE', '/webhooks', {}))
-        self.assertEquals(2, len(self.webhooks))
+        self.assertEqual(2, len(self.webhooks))
 
     def test_can_list_events(self):
         # Setup
@@ -2022,12 +2022,12 @@ class AccountWebHookCollectionTest(unittest.TestCase):
         result = self.webhooks.list_events()
 
         self.assertIsInstance(result, list)
-        self.assertEquals(2, len(result))
-        self.assertEquals(self.webhooks.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(2, len(result))
+        self.assertEqual(self.webhooks.account.adapter.called, 1)
+        self.assertEqual(
             self.webhooks.account.adapter.call,
             ('GET', '/webhooks/events', {}))
-        self.assertEquals(0, len(self.webhooks))
+        self.assertEqual(0, len(self.webhooks))
 
 
 class AccountWorkflowTest(unittest.TestCase):
@@ -2041,16 +2041,16 @@ class AccountWorkflowTest(unittest.TestCase):
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'workflow_id': 201}]
         self.assertIsInstance(self.workflows.fetch_all(), dict)
-        self.assertEquals(self.workflows.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.workflows.account.adapter.called, 1)
+        self.assertEqual(
             self.workflows.account.adapter.call,
             ('GET', '/automation/workflows', {}))
 
     def test_fetch_all_returns_a_dictionary(self):
         MockAdapter.expected = [{'workflow_id': 201}]
         self.assertIsInstance(self.workflows.fetch_all(), dict)
-        self.assertEquals(self.workflows.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.workflows.account.adapter.called, 1)
+        self.assertEqual(
             self.workflows.account.adapter.call,
             ('GET', '/automation/workflows', {}))
 
@@ -2058,9 +2058,9 @@ class AccountWorkflowTest(unittest.TestCase):
         MockAdapter.expected = {'workflow_id': 201}
         workflow = self.workflows.find_one_by_workflow_id(201)
         self.assertIsInstance(workflow, Workflow)
-        self.assertEquals(workflow['workflow_id'], 201)
-        self.assertEquals(self.workflows.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(workflow['workflow_id'], 201)
+        self.assertEqual(self.workflows.account.adapter.called, 1)
+        self.assertEqual(
             self.workflows.account.adapter.call,
             ('GET', '/automation/workflows/201', {}))
 
@@ -2069,11 +2069,11 @@ class AccountWorkflowTest(unittest.TestCase):
         self.workflows.find_one_by_workflow_id(201)
         self.assertIn(201, self.workflows)
         self.assertIsInstance(self.workflows[201], Workflow)
-        self.assertEquals(self.workflows[201]['workflow_id'], 201)
+        self.assertEqual(self.workflows[201]['workflow_id'], 201)
 
     def test_find_one_by_workflow_id_caches_result(self):
         MockAdapter.expected = {'workflow_id': 201}
         self.workflows.find_one_by_workflow_id(201)
         self.workflows.find_one_by_workflow_id(201)
-        self.assertEquals(self.workflows.account.adapter.called, 1)
+        self.assertEqual(self.workflows.account.adapter.called, 1)
 

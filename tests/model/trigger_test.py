@@ -54,7 +54,7 @@ class TriggerTest(unittest.TestCase):
 
         with self.assertRaises(ex.NoTriggerIdError):
             self.trigger.delete()
-        self.assertEquals(self.trigger.account.adapter.called, 0)
+        self.assertEqual(self.trigger.account.adapter.called, 0)
         self.assertFalse(self.trigger.is_deleted())
 
     def test_can_delete_a_trigger2(self):
@@ -63,7 +63,7 @@ class TriggerTest(unittest.TestCase):
         result = self.trigger.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(self.trigger.account.adapter.called, 0)
+        self.assertEqual(self.trigger.account.adapter.called, 0)
         self.assertTrue(self.trigger.is_deleted())
 
     def test_can_delete_a_trigger3(self):
@@ -72,8 +72,8 @@ class TriggerTest(unittest.TestCase):
         result = self.trigger.delete()
 
         self.assertIsNone(result)
-        self.assertEquals(self.trigger.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.trigger.account.adapter.called, 1)
+        self.assertEqual(
             self.trigger.account.adapter.call,
             ('DELETE', '/triggers/200', {}))
         self.assertTrue(self.trigger.is_deleted())
@@ -81,35 +81,35 @@ class TriggerTest(unittest.TestCase):
     def test_can_save_a_trigger(self):
         trigger = Trigger(
             self.trigger.account,
-            {'name':u"Test Trigger"}
+            {'name':"Test Trigger"}
         )
         MockAdapter.expected = 1024
 
         result = trigger.save()
 
         self.assertIsNone(result)
-        self.assertEquals(trigger.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(trigger.account.adapter.called, 1)
+        self.assertEqual(
             trigger.account.adapter.call,
             (
                 'POST',
                 '/triggers',
                 {
-                    'name': u"Test Trigger"
+                    'name': "Test Trigger"
                 }))
-        self.assertEquals(1024, trigger['trigger_id'])
+        self.assertEqual(1024, trigger['trigger_id'])
 
     def test_can_save_a_trigger2(self):
         MockAdapter.expected = True
 
-        self.trigger['name'] = u"Renamed Trigger"
+        self.trigger['name'] = "Renamed Trigger"
         result = self.trigger.save()
 
         self.assertIsNone(result)
-        self.assertEquals(self.trigger.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.trigger.account.adapter.called, 1)
+        self.assertEqual(
             self.trigger.account.adapter.call,
-            ('PUT', '/triggers/200',  {'name': u"Renamed Trigger"}))
+            ('PUT', '/triggers/200',  {'name': "Renamed Trigger"}))
 
 
 class TriggerMailingCollectionTest(unittest.TestCase):
@@ -124,7 +124,7 @@ class TriggerMailingCollectionTest(unittest.TestCase):
         del(self.mailings.trigger['trigger_id'])
         with self.assertRaises(ex.NoSearchIdError):
             self.mailings.fetch_all()
-        self.assertEquals(self.mailings.trigger.account.adapter.called, 0)
+        self.assertEqual(self.mailings.trigger.account.adapter.called, 0)
 
     def test_can_fetch_all_mailings2(self):
         # Setup
@@ -136,13 +136,13 @@ class TriggerMailingCollectionTest(unittest.TestCase):
 
         mailings = self.mailings.fetch_all()
 
-        self.assertEquals(self.mailings.trigger.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.mailings.trigger.account.adapter.called, 1)
+        self.assertEqual(
             self.mailings.trigger.account.adapter.call,
             ('GET', '/triggers/1024/mailings', {}))
         self.assertIsInstance(mailings, dict)
-        self.assertEquals(3, len(mailings))
-        self.assertEquals(3, len(self.mailings))
+        self.assertEqual(3, len(mailings))
+        self.assertEqual(3, len(self.mailings))
         self.assertIsInstance(self.mailings[200], Mailing)
         self.assertIsInstance(self.mailings[201], Mailing)
         self.assertIsInstance(self.mailings[202], Mailing)

@@ -31,6 +31,6 @@ class WorkflowTest(unittest.TestCase):
         )
 
     def test_can_represent_workflow(self):
-        self.assertEquals(
-            u"<Workflow" + repr(self.workflow._dict) + u">",
+        self.assertEqual(
+            "<Workflow" + repr(self.workflow._dict) + ">",
             repr(self.workflow))

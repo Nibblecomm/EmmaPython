@@ -97,7 +97,7 @@ class Trigger(BaseApiModel):
         keys = ['name', 'event_type', 'parent_mailing_id', 'groups', 'links',
                 'signups', 'surveys', 'field_id', 'push_offset', 'is_disabled']
 
-        return dict(x for x in self._dict.items() if x[0] in keys)
+        return dict(x for x in list(self._dict.items()) if x[0] in keys)
 
     def _add(self):
         """Add a single trigger"""

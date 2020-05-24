@@ -161,13 +161,13 @@ class Mailing(BaseApiModel):
             raise ex.NoMailingIdError()
 
         path = "/mailings/%s" % self._dict['mailing_id']
-        data = dict(x for x in {
+        data = dict(x for x in list({
             'recipient_emails': recipient_emails,
             'sender': sender,
             'heads_up_emails': heads_up_emails,
             'recipient_groups': recipient_groups,
             'recipient_searches': recipient_searches
-        }.items() if x[1] is not None)
+        }.items()) if x[1] is not None)
 
         if not data:
             return None

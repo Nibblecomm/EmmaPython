@@ -17,8 +17,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ResponseSummary)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response', {}))
 
@@ -26,8 +26,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ResponseSummary, params={'include_archived': True})
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response', {'include_archived': True}))
 
@@ -35,8 +35,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ResponseSummary, params={'range': "2011-04-01~2011-09-01"})
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response', {'range': "2011-04-01~2011-09-01"}))
 
@@ -44,8 +44,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = {}
         report = get_report(self.account, Report.MailingSummary, 123)
         self.assertIsInstance(report, dict)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123', {}))
 
@@ -53,8 +53,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.SentList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/sends', {}))
 
@@ -62,8 +62,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.InProgressList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/in_progress', {}))
 
@@ -71,8 +71,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.DeliveredList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/deliveries', {}))
 
@@ -80,8 +80,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.DeliveredList, 123, {'del_status': DeliveryType.Delivered})
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/deliveries', {'del_status': 'd'}))
 
@@ -89,8 +89,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.OpenList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/opens', {}))
 
@@ -98,8 +98,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.LinkList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/links', {}))
 
@@ -107,8 +107,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ClickList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/clicks', {}))
 
@@ -116,8 +116,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ClickList, 123, {'member_id': 1024})
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/clicks', {'member_id': 1024}))
 
@@ -125,8 +125,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ClickList, 123, {'link_id': 1024})
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/clicks', {'link_id': 1024}))
 
@@ -134,8 +134,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.ForwardList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/forwards', {}))
 
@@ -143,8 +143,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.OptOutList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/optouts', {}))
 
@@ -152,8 +152,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.SignUpList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/signups', {}))
 
@@ -161,8 +161,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.SharesList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/shares', {}))
 
@@ -170,8 +170,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.CustomerSharesList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/customer_shares', {}))
 
@@ -179,8 +179,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.CustomerShareClicksList, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/customer_share_clicks', {}))
 
@@ -188,8 +188,8 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = {}
         report = get_report(self.account, Report.CustomerShare, 123)
         self.assertIsInstance(report, dict)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/customer_share', {}))
 
@@ -197,7 +197,7 @@ class ReportingTest(unittest.TestCase):
         MockAdapter.expected = []
         report = get_report(self.account, Report.SharesOverview, 123)
         self.assertIsInstance(report, list)
-        self.assertEquals(self.account.adapter.called, 1)
-        self.assertEquals(
+        self.assertEqual(self.account.adapter.called, 1)
+        self.assertEqual(
             self.account.adapter.call,
             ('GET', '/response/123/shares/overview', {}))

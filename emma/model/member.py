@@ -125,9 +125,9 @@ class Member(BaseApiModel):
         if 'email' not in self._dict:
             raise ex.NoMemberEmailError
 
-        extracted = dict(x for x in self._dict.items()
+        extracted = dict(x for x in list(self._dict.items())
             if x[0] in ['member_id', 'email'])
-        fields = dict(x for x in self._dict.items()
+        fields = dict(x for x in list(self._dict.items())
             if x[0] in self.account.fields.export_shortcuts())
         if fields:
             extracted['fields'] = fields
@@ -392,7 +392,7 @@ class MemberGroupCollection(BaseApiModel):
         path = '/members/%s/groups/remove' % self.member['member_id']
         data = {'group_ids': group_ids}
         if self.member.account.adapter.put(path, data):
-            self._dict = dict(x for x in self._dict.items()
+            self._dict = dict(x for x in list(self._dict.items())
                 if x[0] not in group_ids)
 
     def _delete_all_groups(self):
